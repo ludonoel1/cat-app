@@ -57,10 +57,13 @@ function Page() {
     }
   };
 
-  const updateCatData = (plop: ICatData) => {
+  const updateCatData = async (plop: ICatData) => {
     console.log(plop)
+    const cats = await api.updateCatData(plop)  
+    // mettre a jour favoriteCats
     
-  }
+    //mettre à jour setCats(cats)
+}
   const deleteCat = (cat) => {
     console.log(cat)
     if(cat.favourite){
