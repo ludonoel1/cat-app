@@ -1,0 +1,10 @@
+{
+    "name": "collect-my-cat",
+    "version": "1.0.0",
+    "description": "An application to collect your cats",
+    "scripts": {
+      "server": "cd server && python3 server.py",
+      "client": "cd client && npm run dev"
+    }
+  }
+  
