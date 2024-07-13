@@ -1,9 +1,10 @@
 "use client";
-import React, {useEffect, useState } from 'react'
+import React, {FormEvent, useEffect, useRef, useState } from 'react'
 import Card from './components/Card';
 import Header from './components/Header';
 import './page.css'
 import CatModal from './components/CardModal';
+import * as api from "./api";
 
 export interface ICat {
 id: string,
@@ -16,23 +17,21 @@ name: string,
 description: string
 }
 
-export interface ICatData {
-  id: string,
-  name: string,
-  description: string
-}
-
 type Tabs = "search" | "favourites";
 
 function Page() {
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [cats, setCats] = React.useState<ICat[]>([])
   const [selectedTab, setSelectedTab] = useState<Tabs>("search");
   const [favouriteCats, setFavouriteCats] = React.useState<ICat[]>([])
   const [selectedCat, setSelectedCat] = useState<ICat | undefined>(undefined);
+  const pageNumber = useRef(1);
+  const [isLastPage, setIsLastPage] = useState<boolean>(false);
 
   const addFavouriteCat = async (cat: ICat) => {
     try {
-      //await api.addFavouriteRecipe(cat);
+      console.log(cat)
+      await api.addFavouriteCat(cat);
       const index = cats.findIndex(_cat => cat.id === _cat.id)
       cats[index].favourite = true;
       setCats(cats)
@@ -44,7 +43,7 @@ function Page() {
 
   const removeFavouriteCat = async (cat: ICat) => {
     try {
-      //await api.removeFavouriteRecipe(recipe);
+      await api.removeFavouriteCat(cat);
       const updatedCats = favouriteCats.filter(
         (favCat) => favCat.id !== cat.id
       );
@@ -57,11 +56,19 @@ function Page() {
     }
   };
 
-  const updateCatData = async (plop: ICatData) => {
-    console.log(plop)
-    const cats = await api.updateCatData(plop)  
+  const updateCatData = async (updatedCat: ICat) => {
+    console.log(updatedCat)
+    await api.modifyCatDetails(updatedCat)
+    if(updatedCat.favourite){
+      const index = favouriteCats.findIndex(_cat => updatedCat.id === _cat.id)
+      favouriteCats[index] = updatedCat;
+      setFavouriteCats(favouriteCats);
+    }
+    // api delete cat
+    const index = cats.findIndex(_cat => updatedCat.id === _cat.id)
+    cats[index] = updatedCat;
+    setCats(cats)
     // mettre a jour favoriteCats
-    
     //mettre à jour setCats(cats)
 }
   const deleteCat = (cat) => {
@@ -80,10 +87,54 @@ function Page() {
   }
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/cats").then(
-      response => response.json()
-    ).then(data => setCats(data))
-  }, [])
+    const fetchPaginatedCats = async () => {
+      try {
+        const cats = await api.searchCats(searchTerm, 1);
+        setCats(cats);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchPaginatedCats();
+  }, []);
+
+  useEffect(() => {
+    const fetchFavouriteCats = async () => {
+      try {
+        const cats = await api.extractFavouriteRecipes();
+        setFavouriteCats(cats);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFavouriteCats();
+  }, []);
+
+  const handleSearchSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    try {
+      const cats = await api.searchCats(searchTerm, 1);
+      setCats(cats);
+      pageNumber.current = 1;
+      setIsLastPage(false)
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleviewMoreCat = async () => {
+    const nextPage = pageNumber.current + 1;
+    try {
+      const nextCats = await api.searchCats(searchTerm, nextPage);
+      setCats([...cats, ...nextCats]);
+      console.log(pageNumber)
+      pageNumber.current = nextPage;
+      setIsLastPage(nextCats.length === 0)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="app-container">
       <Header/>
@@ -103,21 +154,34 @@ function Page() {
       </div>
       {selectedTab === "search" && (
         <>
+        <form onSubmit={(event) => handleSearchSubmit(event)}>
+            <input
+              type="text"
+              placeholder="Enter a cat name ..."
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+            ></input>
+            <button type="submit">
+              Submit
+            </button>
+          </form>
           <div className="recipe-grid">
             <div className="main-content">
               {cats.map((cat, index) => {
                 return (<Card cat={cat}
                   onClick={() => setSelectedCat(cat)}
-                onFavouriteButtonClick= { cat.favourite ? removeFavouriteCat : addFavouriteCat}
-                onDelete = { deleteCat}
+                  onFavouriteButtonClick= { cat.favourite ? removeFavouriteCat : addFavouriteCat}
+                  onDelete = { deleteCat}
                 />)
               })}
             </div>
           </div>
+          {isLastPage ? <></> : <button className="view-more-button" onClick={handleviewMoreCat}>View more</button>}
         </>
       )}
       {selectedTab === "favourites" && (
-        <div className="cat-grid">
+        <div className="recipe-grid">
+          <div className="main-content">
           {favouriteCats.map((cat) => (
             <Card
               cat={cat}
@@ -126,6 +190,7 @@ function Page() {
               onDelete = { deleteCat}
             />
           ))}
+          </div>
         </div>
       )}
 
@@ -143,19 +208,6 @@ function Page() {
 export default Page
 
 /* 
-<form onSubmit={(event) => handleSearchSubmit(event)}>
-            <input
-              type="text"
-              required
-              placeholder="Enter a search term ..."
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-            ></input>
-            <button type="submit">
-              <AiOutlineSearch size={40} />
-            </button>
-          </form>
-
 
       {selectedTab === "favourites" && (
         <div className="cat-grid">

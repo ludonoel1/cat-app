@@ -3,6 +3,7 @@ body {
     padding-bottom: 5em;
     height: 100vh;
     background-color: rgb(237, 250, 250);
+    background-color: #fffce4;
   }
 .main-content{
     display: inline-flex;
@@ -16,10 +17,25 @@ body {
     gap: 2em;
     cursor: pointer;
     justify-content: center;
+    padding-top: 1rem
 }
 .tab-active {
 border-bottom: 4px rgb(202, 129, 2) solid;
 padding-bottom: 0.5em;
+}
+
+.view-more-button {
+  font-size: 1.5em;
+  display: flex;
+  padding: 1em;
+  font-weight: bold;
+  margin: auto;
+}
+
+button {
+  background-color: white;
+  border: none;
+  cursor: pointer;
 }
 
 
@@ -54,4 +70,10 @@ padding-bottom: 0.5em;
     padding: 2em;
     border-radius: 4px;
     max-width: 500px;
+  }
+
+  form{
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
   }

@@ -1,11 +1,11 @@
 import { FormEvent, useEffect, useState } from "react";
 import * as RecipeAPI from "../api";
-import { ICat, ICatData } from "../page";
+import { ICat } from "../page";
 
 interface Props {
   cat: ICat;
   onClose: () => void;
-  handleUpdateCat: (input: ICatData) => void
+  handleUpdateCat: (input: ICat) => void
 }
 
 const CatModal = ({ cat, onClose, handleUpdateCat }: Props) => {
@@ -48,7 +48,7 @@ const CatModal = ({ cat, onClose, handleUpdateCat }: Props) => {
 ></textarea>
     </div>
     <div className="flex items-center justify-between">
-      <button type="button" onClick={() =>{handleUpdateCat({id: cat.id, name: catNameInput, description: catDescriptionInput})}}>
+      <button type="button" onClick={() =>{onClose(); handleUpdateCat({...cat, name: catNameInput, description: catDescriptionInput })}}>
         Submit
       </button>
     </div>

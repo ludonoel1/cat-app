@@ -1,10 +1,9 @@
 import { ICat } from "./page";
 
-export const searchRecipes = async (searchTerm: string, page: number) => {
-  const baseUrl = new URL("http://localhost:5000/api/recipes/search");
+export const searchCats = async (searchTerm: string, page: number) => {
+  const baseUrl = new URL("http://localhost:8080/api/cats");
   baseUrl.searchParams.append("searchTerm", searchTerm);
   baseUrl.searchParams.append("page", String(page));
-
   const response = await fetch(baseUrl);
   if (!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -13,34 +12,12 @@ export const searchRecipes = async (searchTerm: string, page: number) => {
   return response.json();
 };
 
-export const getRecipeSummary = async (recipeId: string) => {
-  const url = new URL(`http://localhost:5000/api/recipes/${recipeId}/summary`);
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-
-  return response.json();
-};
-
-export const getFavouriteRecipes = async () => {
-  const url = new URL("http://localhost:5000/api/recipes/favourite");
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`HTTP error! Status: ${response.status}`);
-  }
-
-  return response.json();
-};
-
-export const addFavouriteRecipe = async (recipe: ICat) => {
+export const addFavouriteCat = async (cat: ICat) => {
   const url = new URL("http://localhost:8080/api/cats");
   const body = {
-    recipeId: recipe.id,
+    ...cat
   };
-
+console.log(body)
   const response = await fetch(url, {
     method: "POST",
     headers: {
@@ -54,14 +31,38 @@ export const addFavouriteRecipe = async (recipe: ICat) => {
   }
 };
 
-export const removeFavouriteRecipe = async (recipe: ICat) => {
-  const url = new URL("http://localhost:5000/api/recipes/favourite");
-  const body = {
-    recipeId: recipe.id,
-  };
+export const removeFavouriteCat = async (cat: ICat) => {
+  const url = new URL(`http://localhost:8080/api/cats/${cat.id}`);
 
   const response = await fetch(url, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+}; 
+
+export const extractFavouriteRecipes = async () => {
+  const url = new URL("http://localhost:8080/api/favouritecats");
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return response.json();
+};
+
+export const modifyCatDetails = async (cat: ICat) => {
+  const url = new URL(`http://localhost:8080/api/cats/${cat.id}`);
+  const body = {
+    ...cat
+  };
+  const response = await fetch(url, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
