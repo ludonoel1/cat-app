@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS cats (
     url TEXT,
     favourite BOOLEAN,
     name VARCHAR(255),
-    description LONGTEXT
+    description TEXT
 );
 
 -- Create a table favouritecats within the collectmycats database if not already created 

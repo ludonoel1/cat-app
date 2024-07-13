@@ -38,9 +38,13 @@ It's built using React for the frontend and python Flask for the backend and a p
      psql -U POSTGRES_USERNAME -f create_database.sql
      ```
    - Please verify that your databse has been created
-   
-5. **Setting up your backend**:
 
+5. **Setting up your backend**:
+   - Install the depedencies:
+    - python3
+    -  ```bash
+       pip3 install flask-swagger-ui
+       ```
    - Put your own value in file '.env':
      -  DB_USER = DB_USERNAME
         DB_PASS = DB_USER_PASSWORD
@@ -55,6 +59,8 @@ It's built using React for the frontend and python Flask for the backend and a p
      ```bash
        npm run server
        ```
+    - You can access to swagger to see requests by this link:
+        http://localhost:8080/api/swagger/
 
 6. **Setting up the Frontend**:
 

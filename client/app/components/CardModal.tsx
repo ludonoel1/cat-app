@@ -1,6 +1,5 @@
-import { FormEvent, useEffect, useState } from "react";
-import * as RecipeAPI from "../api";
-import { ICat } from "../page";
+import { useState } from "react";
+import { ICat } from "../types";
 
 interface Props {
   cat: ICat;
@@ -23,11 +22,11 @@ const CatModal = ({ cat, onClose, handleUpdateCat }: Props) => {
               &times;
             </span>
           </div>
-          <div className="w-full max-w-xs">
-  <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <div>
+  <form className="bg-white shadow-md rounded update-form px-8 pt-6 pb-8 mb-4">
     <div className="mb-4">
       <label className="block text-gray-700 text-sm font-bold mb-2">
-        Username
+        Name
       </label>
       <input
       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -41,14 +40,14 @@ const CatModal = ({ cat, onClose, handleUpdateCat }: Props) => {
       <label className="block text-gray-700 text-sm font-bold mb-2" >
         Description
       </label>
-      <textarea
+      <textarea className="textarea"
   placeholder="Enter a description"
   value={catDescriptionInput}
   onChange={(event) => setCatDescriptionInput(event.target.value)}
 ></textarea>
     </div>
     <div className="flex items-center justify-between">
-      <button type="button" onClick={() =>{onClose(); handleUpdateCat({...cat, name: catNameInput, description: catDescriptionInput })}}>
+      <button className="submit-button" type="button" onClick={() =>{onClose(); handleUpdateCat({...cat, name: catNameInput, description: catDescriptionInput })}}>
         Submit
       </button>
     </div>

@@ -1,0 +1,224 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "Access API",
+      "version": "1.0.0"
+    },
+    "paths": {
+        "/api/cats": {
+          "get": {
+            "description": "Returns 10 first cats by searchterm = '' and first page",
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful operation"
+              },
+              "400": {
+                "description": "There is an error"
+              },
+              "500": {
+                "description": "Error connection with the server"
+              }
+            }
+          },
+          "post": {
+            "description": "Add a new cat in favourite",
+            "consumes": [
+              "application/json"
+            ],
+            "produces": [
+              "application/json"
+            ],
+            "parameters": [
+              { 
+                "name": "cat data",
+              "in": "body",
+              "description": "cat object for the request",
+              "required": true,
+                "schema": {
+                  "$ref": "#/definitions/CatBody"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Cat added in favourite successfully"
+              },
+              "400": {
+                "description": "There is an error"
+              },
+              "500": {
+                "description": "Error connection with the server"
+              }
+            }
+          }
+        },
+        "/api/cats?searchTerm={searchTerm}&page={pageNumber}": {
+          "get": {
+            "description": "Returns 10 first cats by searchterm = 'sav' and first page",
+            "produces": [
+              "application/json"
+            ],
+            "parameters": [
+              { 
+                "name": "searchTerm",
+                "in": "path",
+                "description": "search a cat by his name",
+                "required": true,
+                "schema":{
+                  "type": "string"
+                }
+              },
+              { 
+                "name": "pageNumber",
+                "in": "path",
+                "description": "page number",
+                "required": true,
+                "schema":{
+                  "type": "integer"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful operation"
+              },
+              "400": {
+                "description": "There is an error"
+              },
+              "500": {
+                "description": "Error connection with the server"
+              }
+            }
+          }
+        },
+        "/api/favouritecats": {
+          "get": {
+            "description": "Returns all favourite cats",
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Successful operation"
+              },
+              "400": {
+                "description": "There is an error"
+              },
+              "500": {
+                "description": "Error connection with the server"
+              }
+            }
+          }
+        },
+        "/api/cats/{catId}": {
+          "get": {
+            "description": "Returns details for the cat id",
+            "produces": [
+              "application/json"
+            ],
+            "parameters": [
+              { 
+                "name": "catId",
+                "in": "path",
+                "description": "cat id",
+                "required": true,
+                "schema":{
+                  "type": "string"
+                }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Details successfully got"
+              },
+              "400": {
+                "description": "There is an error"
+              },
+              "500": {
+                "description": "Error connection with the server"
+              }
+            }
+          },
+          "put": {
+            "description": "Update details for the cat id",
+            "consumes": [
+              "application/json"
+            ],
+            "produces": [
+              "application/json"
+            ],
+            "parameters": [
+              { 
+                "name": "new cat data",
+                "in": "body",
+                "description": "cat object for the update request",
+                "required": true,
+                  "schema": {
+                    "$ref": "#/definitions/CatBody"
+                  }
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Cat details successfully updated"
+              },
+              "400": {
+                "description": "There is an error"
+              },
+              "500": {
+                "description": "Error connection with the server"
+              }
+            }
+          },
+          "delete": {
+            "description": "delete cat from favourites for the cat id",
+            "consumes": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Cat successfully deleted from favourites"
+              },
+              "400": {
+                "description": "There is an error"
+              },
+              "500": {
+                "description": "Error connection with the server"
+              }
+            }
+          }
+        }
+    },
+    "definitions": {
+      "CatBody": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "height": {
+            "type": "number"
+          },
+          "width": {
+            "type": "number"
+          },
+          "favourite": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      }
+    }
+}
+

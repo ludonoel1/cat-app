@@ -5,17 +5,7 @@ import Header from './components/Header';
 import './page.css'
 import CatModal from './components/CardModal';
 import * as api from "./api";
-
-export interface ICat {
-id: string,
-url: string,
-width: number,
-height: number,
-breeds: any,
-favourite: any,
-name: string,
-description: string
-}
+import { ICat } from './types';
 
 type Tabs = "search" | "favourites";
 
@@ -30,7 +20,6 @@ function Page() {
 
   const addFavouriteCat = async (cat: ICat) => {
     try {
-      console.log(cat)
       await api.addFavouriteCat(cat);
       const index = cats.findIndex(_cat => cat.id === _cat.id)
       cats[index].favourite = true;
@@ -57,29 +46,25 @@ function Page() {
   };
 
   const updateCatData = async (updatedCat: ICat) => {
-    console.log(updatedCat)
     await api.modifyCatDetails(updatedCat)
+    const updatedCats = cats.slice()
+    const index = updatedCats.findIndex(_cat => updatedCat.id === _cat.id)
+    updatedCats[index] = updatedCat;
+    setCats(updatedCats)
     if(updatedCat.favourite){
       const index = favouriteCats.findIndex(_cat => updatedCat.id === _cat.id)
       favouriteCats[index] = updatedCat;
       setFavouriteCats(favouriteCats);
     }
-    // api delete cat
-    const index = cats.findIndex(_cat => updatedCat.id === _cat.id)
-    cats[index] = updatedCat;
-    setCats(cats)
-    // mettre a jour favoriteCats
-    //mettre à jour setCats(cats)
+    
 }
-  const deleteCat = (cat) => {
-    console.log(cat)
+  const deleteCat = (cat: ICat) => {
     if(cat.favourite){
       const updatedCats = favouriteCats.filter(
         (favCat) => favCat.id !== cat.id
       );
       setFavouriteCats(updatedCats);
     }
-    // api delete cat
     const updatedCats = cats.filter(
       (_cat) => _cat.id !== cat.id
     );
@@ -127,7 +112,6 @@ function Page() {
     try {
       const nextCats = await api.searchCats(searchTerm, nextPage);
       setCats([...cats, ...nextCats]);
-      console.log(pageNumber)
       pageNumber.current = nextPage;
       setIsLastPage(nextCats.length === 0)
     } catch (error) {
@@ -168,7 +152,7 @@ function Page() {
           <div className="recipe-grid">
             <div className="main-content">
               {cats.map((cat, index) => {
-                return (<Card cat={cat}
+                return (<Card key={index} cat={cat}
                   onClick={() => setSelectedCat(cat)}
                   onFavouriteButtonClick= { cat.favourite ? removeFavouriteCat : addFavouriteCat}
                   onDelete = { deleteCat}
@@ -182,10 +166,10 @@ function Page() {
       {selectedTab === "favourites" && (
         <div className="recipe-grid">
           <div className="main-content">
-          {favouriteCats.map((cat) => (
-            <Card
+          {favouriteCats.map((cat,index) => (
+            <Card key={index}
               cat={cat}
-              //onClick={() => setSelectedCat(cat)}
+              onClick={() => setSelectedCat(cat)}
               onFavouriteButtonClick= { removeFavouriteCat}
               onDelete = { deleteCat}
             />
@@ -206,25 +190,3 @@ function Page() {
 }
 
 export default Page
-
-/* 
-
-      {selectedTab === "favourites" && (
-        <div className="cat-grid">
-          {favouriteCats.map((cat) => (
-            <Card
-              cat={cat}
-              onClick={() => setSelectedCat(cat)}
-              onFavouriteButtonClick={removeFavouriteCat}
-              isFavourite={true}
-            />
-          ))}
-        </div>
-      )}
-
-      {selectedCat ? (
-        <Card
-          catId={selectedCat.id.toString()}
-          onClose={() => setSelectedCat(undefined)}
-        />
-      ) : null}*/ 

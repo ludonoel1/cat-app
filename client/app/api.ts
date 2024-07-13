@@ -1,6 +1,6 @@
-import { ICat } from "./page";
+import { ICat } from "./types";
 
-export const searchCats = async (searchTerm: string, page: number) => {
+export const searchCats = async (searchTerm: string, page: number): Promise<ICat[]> => {
   const baseUrl = new URL("http://localhost:8080/api/cats");
   baseUrl.searchParams.append("searchTerm", searchTerm);
   baseUrl.searchParams.append("page", String(page));
@@ -17,7 +17,6 @@ export const addFavouriteCat = async (cat: ICat) => {
   const body = {
     ...cat
   };
-console.log(body)
   const response = await fetch(url, {
     method: "POST",
     headers: {
