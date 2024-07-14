@@ -58,18 +58,6 @@ function Page() {
     }
     
 }
-  const deleteCat = (cat: ICat) => {
-    if(cat.favourite){
-      const updatedCats = favouriteCats.filter(
-        (favCat) => favCat.id !== cat.id
-      );
-      setFavouriteCats(updatedCats);
-    }
-    const updatedCats = cats.filter(
-      (_cat) => _cat.id !== cat.id
-    );
-    setCats(updatedCats);
-  }
 
   useEffect(() => {
     const fetchPaginatedCats = async () => {
@@ -123,13 +111,13 @@ function Page() {
     <div className="app-container">
       <Header/>
       <div className="tabs">
-        <h1
+        <h1 data-cy='home-tab'
           className={selectedTab === "search" ? "tab-active" : ""}
           onClick={() => setSelectedTab("search")}
         >
           Cat Search
         </h1>
-        <h1
+        <h1 data-cy='favourite-tab'
           className={selectedTab === "favourites" ? "tab-active" : ""}
           onClick={() => setSelectedTab("favourites")}
         >
@@ -145,7 +133,7 @@ function Page() {
               value={searchTerm}
               onChange={(event) => setSearchTerm(event.target.value)}
             ></input>
-            <button type="submit">
+            <button data-cy="submit-search-button" type="submit">
               Submit
             </button>
           </form>
@@ -153,14 +141,13 @@ function Page() {
             <div className="main-content">
               {cats.map((cat, index) => {
                 return (<Card key={index} cat={cat}
-                  onClick={() => setSelectedCat(cat)}
+                  onOpenModal={(cat:ICat) => setSelectedCat(cat)}
                   onFavouriteButtonClick= { cat.favourite ? removeFavouriteCat : addFavouriteCat}
-                  onDelete = { deleteCat}
                 />)
               })}
             </div>
           </div>
-          {isLastPage ? <></> : <button className="view-more-button" onClick={handleviewMoreCat}>View more</button>}
+          {isLastPage ? <></> : <button data-cy="view-more-button" className="view-more-button" onClick={handleviewMoreCat}>View more</button>}
         </>
       )}
       {selectedTab === "favourites" && (
@@ -169,9 +156,8 @@ function Page() {
           {favouriteCats.map((cat,index) => (
             <Card key={index}
               cat={cat}
-              onClick={() => setSelectedCat(cat)}
+              onOpenModal={(cat) => setSelectedCat(cat)}
               onFavouriteButtonClick= { removeFavouriteCat}
-              onDelete = { deleteCat}
             />
           ))}
           </div>

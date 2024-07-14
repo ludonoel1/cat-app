@@ -28,7 +28,7 @@ const CatModal = ({ cat, onClose, handleUpdateCat }: Props) => {
       <label className="block text-gray-700 text-sm font-bold mb-2">
         Name
       </label>
-      <input
+      <input data-cy="update-name-input"
       className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
   type="text"
   placeholder="Enter a name for this cat"
@@ -47,7 +47,7 @@ const CatModal = ({ cat, onClose, handleUpdateCat }: Props) => {
 ></textarea>
     </div>
     <div className="flex items-center justify-between">
-      <button className="submit-button" type="button" onClick={() =>{onClose(); handleUpdateCat({...cat, name: catNameInput, description: catDescriptionInput })}}>
+      <button data-cy="submit-update-button" className="submit-button" type="button" onClick={() =>{onClose(); handleUpdateCat({...cat, name: catNameInput, description: catDescriptionInput })}}>
         Submit
       </button>
     </div>
