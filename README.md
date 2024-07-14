@@ -83,3 +83,16 @@ It's built using React for the frontend and python Flask for the backend and a p
      cd ..
      npm run client
      ```
+
+7. **Launch end-to-end test with Cypress**:
+    ```bash
+     cd client
+     npx cypress open
+     ```
+
+     Choose end-to-end testing
+     Chrome
+     and run spec.cy.ts
+
+     Be sure that your server is running and your client too !
+     
