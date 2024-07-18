@@ -7,7 +7,7 @@ It's built using React for the frontend and python Flask for the backend and a p
 
 ### Prerequisites:
 
-- Node.js and npm installed on your machine.
+- Node.js version 18.17.0 or latest and npm installed on your machine.
 - Python3 and Flask installed on your machine or you can activate an environment (https://flask.palletsprojects.com/en/3.0.x/installation/)
 - psql and postgres installed on your machine.
 
@@ -40,22 +40,31 @@ It's built using React for the frontend and python Flask for the backend and a p
    - Please verify that your databse has been created
 
 5. **Setting up your backend**:
-   - Install the depedencies:
-    - python3
+
+  - Check if you have pip3:
     -  ```bash
-       pip3 install flask-swagger-ui
+       pip3 --version
        ```
-   - Put your own value in file '.env':
+  - if not :
+    -  ```bash
+       python -m pip3 install --upgrade pip
+       ```
+
+  - Install the depedencies:
+    -  ```bash
+       pip3 install flask-swagger-ui python-dotenv flask_cors psycopg2 requests
+       ```
+   - Change with your own value in file '.env':
      -  DB_USER = DB_USERNAME
         DB_PASS = DB_USER_PASSWORD
         DB_PORT = PORT
 
    - **Run server**:
-     - You can run this: 
+     - You can run this, if you have make: 
      ```bash
        make run
        ```
-     - or this: 
+     - or this (if you don't have make): 
      ```bash
        npm run server
        ```
